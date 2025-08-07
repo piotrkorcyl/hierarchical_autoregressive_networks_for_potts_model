@@ -63,6 +63,6 @@ start_counting = 100
 colected_batches = 100
 beta_anneal= 0.0; ##998
 
-batch_size=1
+batch_size=256
 print_step=1
 lr = 0.0005

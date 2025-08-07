@@ -346,7 +346,7 @@ class MADE_i(nn.Module):
     def _log_prob(self, sample, x_hat, Q):
         log_prob = torch.flatten(torch.sum(torch.log(torch.sum((sample*x_hat),3)),2))
         
-       return log_prob
+        return log_prob
 
     def log_prob(self, sample,border,beta, Q):
         x_hat = self.forward(sample,border, Q)
@@ -371,7 +371,7 @@ def make_square(batch_size, default_dtype_torch, device, L, Q, n_block, sample_b
             configuration[:,:,i*block_width:(i+1)*block_width,j*block_width:(j+1)*block_width,:]=block
             block_number+= 1
 
-   return configuration
+    return configuration
 
 def find_borders(square):
 

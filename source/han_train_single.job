@@ -1,0 +1,9 @@
+#!/bin/bash
+#SBATCH --job-name=han_train_array
+#SBATCH --output=./slurm_out/han_ising.%A_%a.out
+#SBATCH --error=./slurm_out/han_ising.%A_%a.err
+#SBATCH --time=72:00:00
+#SBATCH --nodelist=gnode1
+
+cd $SLURM_SUBMIT_DIR
+python multinets.py --beta0 0.499 --Lv 32 --net_type mnVAN --rn 1

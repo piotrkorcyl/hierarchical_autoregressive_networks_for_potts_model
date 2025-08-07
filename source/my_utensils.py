@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy import stats
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 
 def trans_conf(config,n_y,L): ## shift configuration of spins in y direction by n_y=0,1,..,L-1

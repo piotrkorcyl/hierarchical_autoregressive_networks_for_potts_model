@@ -99,7 +99,7 @@ def neibours_sum(sample):
         
 
     #if ham == 'fm':
-    output *= -1
+    #output *= -1
 
     return output
 

@@ -1,0 +1,9 @@
+#!/bin/bash
+#SBATCH --job-name=nmcmc_analysis
+#SBATCH --output=./slurm_out/nmcmc.%A_%a.out
+#SBATCH --error=./slurm_out/nmcmc.%A_%a.err
+#SBATCH --time=72:00:00
+#SBATCH --nodelist=gnode1
+
+cd $SLURM_SUBMIT_DIR
+python nmcmc_analysis.py --beta0 0.499 --batches 586 --Lv 16 --model_dir /home/egad/hierarchical_autoregressive_networks_for_potts_model/source/ising_L16_b0.439/

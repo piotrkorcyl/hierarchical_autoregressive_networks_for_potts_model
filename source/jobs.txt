@@ -1,0 +1,4 @@
+python multinets.py --beta0 0.499 --Lv 16 --net_type mnVAN --rn 1
+python multinets.py --beta0 0.499 --Lv 32 --net_type mnVAN --rn 1
+python multinets.py --beta0 0.499 --Lv 64 --net_type mnVAN --rn 1
+python multinets.py --beta0 0.499 --Lv 128 --net_type mnVAN --rn 1

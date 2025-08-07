@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name=han_train_single
+#SBATCH --output=./slurm_out/han_ising.%A_%a.out
+#SBATCH --error=./slurm_out/han_ising.%A_%a.err
+#SBATCH --time=72:00:00
+#SBATCH --nodelist=gnode1
+#SBATCH --array=1-4
+
+cd $SLURM_SUBMIT_DIR
+command=$(awk "NR==$SLURM_ARRAY_TASK_ID" jobs.txt)
+$command

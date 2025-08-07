@@ -1,0 +1,34 @@
+Running NMCMC analysis
+beta_final: 0.4398054199227519
+L: 16
+batch_size: 1024
+batches to collect: 100
+device: cuda:0
+
+number of int nets: 4
+crosses sizes Li: [15  7  3  1]
+Boundary network loaded from /home/egad/hierarchical_autoregressive_networks_for_potts_model/source/ising_L16_b0.439/saved_state_b_L=16_beta=0.4398054199227519_mn.out
+Interior networks loaded
+
+Starting NMCMC sampling...
+Batch 20/100
+Batch 40/100
+Batch 60/100
+Batch 80/100
+Batch 100/100
+
+Results before Metropolis:
+F = -2.690615 ± 0.000001
+U = -1.239197 ± 0.000156
+ESS = 0.9988
+
+Acceptance ratio: 0.9806
+tau_int = 1.03
+
+Results after Metropolis:
+F = -2.690626 ± 0.000001
+U = -1.239089 ± 0.000159
+
+Total time: 664.18 seconds
+
+Results saved to nmcmc_results_L=16_beta=0.4398054199227519_mnVAN.txt
