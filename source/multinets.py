@@ -43,7 +43,7 @@ from scipy.special import logsumexp
 from scipy.optimize import curve_fit
 from scipy import stats
 from my_args import my_args
-
+import matplotlib.pyplot as plt
 import my_utensils as uten
 import my_potts
 from my_parameters import *

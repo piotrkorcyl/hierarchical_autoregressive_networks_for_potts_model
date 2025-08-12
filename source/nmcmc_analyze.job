@@ -6,4 +6,4 @@
 #SBATCH --nodelist=gnode1
 
 cd $SLURM_SUBMIT_DIR
-python nmcmc_analysis.py --beta0 0.499 --batches 586 --Lv 16 --model_dir /home/egad/hierarchical_autoregressive_networks_for_potts_model/source/ising_L16_b0.439/
+python nmcmc_analysis.py --beta0 0.499 --batches 586 --Lv 64 --model_dir /home/egad/hierarchical_autoregressive_networks_for_potts_model/source/ising_L64_b0.439_z2_symmetry/

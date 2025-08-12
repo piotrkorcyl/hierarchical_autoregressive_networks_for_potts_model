@@ -224,32 +224,50 @@ def calc_log_prob(z2, translation_y, net_b, int_nets, Q, beta, sample, step, dev
     batch_size = sample.shape[0]
     L = sample.shape[2]
     
-    log_prob_all = torch.zeros( [4,8,12,2,batch_size ], dtype=default_dtype_torch, device=device )
-
-    count=0
-
-    for n_y in range(0,4):
-        sample_inv = torch.roll(sample, shifts=int(n_y*L/4), dims=2 ) 
-        for q in range(0,12):
-            sample_inv_q = torch.roll(sample_inv, shifts=q, dims=4 ) 
-            for n_x in range(0,8):
-                sample_inv_q_x = torch.roll(sample_inv_q, shifts=int(n_x*L/8), dims=3 ) 
-                for rr in range(0,2):
-                    if(rr==0):
-                        sample_inv_q_x_rr = sample_inv_q_x
-                    if(rr==1):
-                        sample_inv_q_x_rr = sample_inv_q_x.permute(0,1,3,2,4)
+    if not z2 and not translation_y:
+        list_args_for_nets, log_prob_chess = breakdown_square(sample, beta, L, Q, batch_size)
+        log_prob = _calc_log_prob_net(net_b, int_nets, beta, 1, list_args_for_nets, Q)
+        log_prob = log_prob + log_prob_chess
+        
+        del list_args_for_nets, log_prob_chess
+        torch.cuda.empty_cache()
+        
+        return log_prob
+    
+    log_sum_acc = torch.full([batch_size], float('-inf'), dtype=default_dtype_torch, device=device)
+    n_symmetries = 0
+    
+    list_args_for_nets, log_prob_chess = breakdown_square(sample, beta, L, Q, batch_size)
+    log_prob = _calc_log_prob_net(net_b, int_nets, beta, 1, list_args_for_nets, Q)
+    log_sum_acc = torch.logaddexp(log_sum_acc, log_prob + log_prob_chess)
+    n_symmetries += 1
+    del list_args_for_nets, log_prob_chess
+    
+    if z2:
+        sample_flipped = 1 - sample 
+        list_args_z2, log_prob_chess_z2 = breakdown_square(sample_flipped, beta, L, Q, batch_size)
+        log_prob_z2 = _calc_log_prob_net(net_b, int_nets, beta, 1, list_args_z2, Q)
+        log_sum_acc = torch.logaddexp(log_sum_acc, log_prob_z2 + log_prob_chess_z2)
+        n_symmetries += 1
+        del list_args_z2, log_prob_chess_z2, sample_flipped
+        torch.cuda.empty_cache()
+    
+    if translation_y:
+        for shift_y in range(1, L): 
+            sample_shifted = torch.roll(sample, shifts=shift_y, dims=2)
+            list_args_shifted, log_prob_chess_shifted = breakdown_square(sample_shifted, beta, L, Q, batch_size)
+            log_prob_shifted = _calc_log_prob_net(net_b, int_nets, beta, 1, list_args_shifted, Q)
+            log_sum_acc = torch.logaddexp(log_sum_acc, log_prob_shifted + log_prob_chess_shifted)
+            n_symmetries += 1
             
-                    list_args_for_nets_inv, log_prob_chess_inv = breakdown_square(sample_inv_q_x_rr, beta, L, Q, batch_size)
-
-                    log_prob_inv = _calc_log_prob_net(net_b, int_nets, beta, 1 ,list_args_for_nets_inv, Q )
-                    log_prob_all[n_y,n_x,q,rr,:] = log_prob_inv + log_prob_chess_inv
-
-    log_prob = torch.logsumexp(log_prob_all, dim=(0,1,2,3))
-    log_prob = log_prob - np.log(768)     
-
+            del list_args_shifted, log_prob_chess_shifted, sample_shifted
+            
+            if shift_y % 8 == 0:
+                torch.cuda.empty_cache()
+    
+    log_prob = log_sum_acc - np.log(n_symmetries) 
+    torch.cuda.empty_cache() 
     return log_prob
-
 
 
 

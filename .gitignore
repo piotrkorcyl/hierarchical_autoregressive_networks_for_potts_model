@@ -1,0 +1,3 @@
+source/slurm_out
+source/*.txt
+source/*.job
